@@ -1,0 +1,26 @@
+.container {
+  min-height: 100vh;
+  background-color: #ffffff;
+  color: #111827;
+  padding: 1rem;
+  transition: background-color 0.2s, color 0.2s; /* Opcional: deixa a transição suave */
+}
+
+/* Quando o html estiver com data-theme="dark", aplica essas cores automaticamente */
+[data-theme='dark'] .container {
+  background-color: #111827;
+  color: #ffffff;
+}
+
+.button {
+  padding: 0.25rem 0.75rem;
+  background-color: #e5e7eb;
+  border: none;
+  border-radius: 0.375rem;
+  cursor: pointer;
+}
+
+[data-theme='dark'] .button {
+  background-color: #374151;
+  color: #ffffff;
+}

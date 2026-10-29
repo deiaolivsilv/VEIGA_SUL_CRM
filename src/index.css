@@ -1,0 +1,123 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+  /* Brand Colors */
+  --primary: #0e1530;
+  --primary-light: #1A2750;
+  --accent: #71BC53;
+  --accent-hover: #5DA442;
+  --grey: #C3C3C3;
+  --grey-light: #E0E0E0;
+  
+  /* Stages Colors */
+  --stage-1: #3b82f6; /* Em contato */
+  --stage-2: #8b5cf6; /* Pré-venda */
+  --stage-3: #f59e0b; /* Realizar orçamento */
+  --stage-4: #10b981; /* Orçamento finalizado */
+  --stage-5: #eab308; /* Negociação */
+  --stage-6: #71BC53; /* Fechamento */
+  --stage-7: #ef4444; /* Perda */
+
+  /* Light Theme */
+  --bg-main: #e2e8f0; /* Darker Slate Gray 200 for less brightness */
+  --bg-surface: #ffffff;
+  --text-main: #1e293b; /* Slate 800 */
+  --text-muted: #475569; /* Slate 600 */
+  --border: #cbd5e1; /* Slate 300 to show up more */
+  --input-bg: #f8fafc; /* Slate 50 */
+  
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --radius: 8px;
+}
+
+[data-theme='dark'] {
+  --bg-main: #0f172a; /* Slate 900 */
+  --bg-surface: #1e293b; /* Slate 800 */
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --border: #334155;
+  --input-bg: #0f172a;
+
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.4);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5), 0 4px 6px -4px rgb(0 0 0 / 0.5);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  transition: background-color 0.4s ease-out, color 0.4s ease-out;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Global Transition classes for hovering interactive elements */
+button, a, .card, .userPill, select, input {
+  transition: all 0.25s ease-out;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+input, textarea, select {
+  font-family: inherit;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+/* Utility classes */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* Glassmorphism utility for modern feel */
+.glass {
+  background: rgba(var(--bg-surface-rgb), 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--border);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-main);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--grey);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-light);
+}

@@ -1,0 +1,248 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.titleArea {
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.subtitle {
+  color: var(--text-muted);
+  font-size: 1rem;
+}
+
+.filtersWrapper {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.pillBox {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.pillBtn {
+  padding: 0.4rem 0.9rem;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background-color: var(--bg-surface);
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+  transition: all 0.2s;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.pillBtn:hover {
+  border-color: var(--text-muted);
+  color: var(--text-main);
+}
+
+.pillActive {
+  background-color: var(--accent);
+  border-color: var(--accent);
+  color: #ffffff !important;
+  box-shadow: 0 4px 10px rgba(113, 188, 83, 0.3);
+}
+
+.searchBox, .filterBox {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.searchBox input, .filterBox select {
+  padding: 0.75rem 1rem 0.75rem 2.5rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background-color: var(--bg-surface);
+  color: var(--text-main);
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s;
+  min-width: 200px;
+  cursor: pointer;
+}
+
+.filterBox select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 2.5rem;
+}
+
+.filterBox .filterIcon {
+  color: var(--text-muted);
+}
+
+.searchBox input:focus, .filterBox select:focus {
+  border-color: var(--accent);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(113, 188, 83, 0.2);
+}
+
+.searchIcon, .filterIcon {
+  position: absolute;
+  left: 12px;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.boardScroll {
+  flex: 1;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 1rem;
+}
+
+.board {
+  display: inline-flex;
+  gap: 1rem;
+  height: 100%;
+  align-items: flex-start;
+  min-width: min-content;
+}
+
+/* Kanban Components Base styling since we are creating them soon */
+.kanbanColumn {
+  width: 320px;
+  background-color: rgba(var(--bg-surface-rgb), 0.5); /* fallback */
+  background-color: var(--bg-surface);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  max-height: 100%;
+  flex-shrink: 0;
+}
+
+.kanbanColumnHeader {
+  padding: 1rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  color: var(--text-main);
+  text-transform: capitalize;
+}
+
+.kanbanBadge {
+  background-color: var(--bg-main);
+  color: var(--text-muted);
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+}
+
+.columnContent {
+  padding: 1rem;
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+[data-theme='dark'] .columnContent {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.kanbanList {
+  padding: 1rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-height: 150px;
+}
+
+.kanbanCard {
+  background-color: var(--bg-surface);
+  border-radius: var(--radius);
+  padding: 1rem;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  cursor: grab;
+  position: relative;
+}
+
+.kanbanCard:active {
+  cursor: grabbing;
+}
+
+.cardDragging {
+  opacity: 0.35;
+  scale: 0.96;
+  box-shadow: none;
+}
+
+.cardOverlay {
+  box-shadow: 0 32px 64px -8px rgba(0, 0, 0, 0.4), 0 0 0 2px var(--accent);
+  transform: scale(1.04) rotate(-1.5deg);
+  z-index: 9999;
+  opacity: 0.97;
+  cursor: grabbing;
+  border-color: var(--accent) !important;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.cardVendor {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.cardTitle {
+  font-weight: 600;
+  color: var(--text-main);
+  margin-bottom: 0.25rem;
+}
+
+.cardCompany {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 0.75rem;
+}
+
+.cardValue {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--accent);
+}

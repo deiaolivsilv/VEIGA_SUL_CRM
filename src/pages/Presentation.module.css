@@ -1,0 +1,490 @@
+.container {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  background-color: var(--bg-main);
+}
+
+/* Config Panel Styles */
+.configPanel {
+  width: 320px;
+  background: var(--bg-surface);
+  border-right: 1px solid var(--border);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.panelHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.panelHeader h2 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin: 0;
+}
+
+.accentIcon {
+  color: var(--accent);
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.formGroup label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.formGroup input[type="text"],
+.formGroup textarea {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg-main);
+  color: var(--text-main);
+  font-size: 0.85rem;
+  outline: none;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+.formGroup input[type="text"]:focus,
+.formGroup textarea:focus {
+  border-color: var(--accent);
+}
+
+.colorPickerWrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.colorPicker {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  background: transparent;
+}
+
+.colorPicker::-webkit-color-swatch {
+  border: 2px solid var(--border);
+  border-radius: 50%;
+  padding: 0;
+}
+
+.colorValue {
+  font-size: 0.85rem;
+  font-family: monospace;
+  color: var(--text-main);
+}
+
+.sectionToggles {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 1rem 0;
+}
+
+.sectionTogglesTitle {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.2rem;
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--text-main);
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.checkboxLabel input {
+  cursor: pointer;
+  accent-color: var(--accent);
+}
+
+.printBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: var(--accent);
+  color: white;
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: auto;
+}
+
+.printBtn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(113, 188, 83, 0.2);
+}
+
+/* Preview Area Styles */
+.previewContainer {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  box-sizing: border-box;
+}
+
+.previewHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  align-self: flex-start;
+  max-width: 210mm;
+  width: 100%;
+}
+
+/* Page preview base (A4 template) */
+.a4Page {
+  width: 210mm;
+  min-height: 297mm;
+  background: #ffffff;
+  color: #1e293b;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  box-sizing: border-box;
+  padding: 20mm 15mm;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  font-family: 'Outfit', 'Inter', sans-serif;
+  text-align: left;
+}
+
+/* Printable Branded Header */
+.docHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.docLogo {
+  max-height: 48px;
+  object-fit: contain;
+}
+
+.fallbackLogo {
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  margin: 0;
+  color: var(--accent-color);
+}
+
+.docMeta {
+  text-align: right;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: #475569;
+}
+
+.docMeta p {
+  margin: 0;
+}
+
+.docDivider {
+  border: 0;
+  height: 2px;
+  background: var(--accent-color);
+  opacity: 0.8;
+  margin: 0;
+}
+
+/* Titles */
+.docTitleSection {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.docTitle {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.docSubtitle {
+  font-size: 1rem;
+  color: #475569;
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Presentation Sections */
+.docSection {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.sectionHeading {
+  font-size: 0.95rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #0f172a;
+  margin: 0;
+  border-left: 4px solid var(--accent-color);
+  padding-left: 0.5rem;
+}
+
+/* KPI Cards Layout */
+.kpiGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.kpiCard {
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  padding: 1rem;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.kpiLabel {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.kpiValue {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+/* Tables inside PDF template */
+.docTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.docTable th {
+  background: #f1f5f9;
+  border-bottom: 2px solid #cbd5e1;
+  padding: 0.6rem 0.8rem;
+  text-align: left;
+  font-weight: 700;
+  color: #475569;
+}
+
+.docTable td {
+  border-bottom: 1px solid #e2e8f0;
+  padding: 0.6rem 0.8rem;
+  color: #334155;
+  vertical-align: middle;
+}
+
+.docTable tr:nth-child(even) td {
+  background: #f8fafc;
+}
+
+.stageBadge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  background: #f1f5f9;
+  padding: 2px 8px;
+  border-radius: 4px;
+  color: #475569;
+}
+
+.tableNote {
+  font-size: 0.75rem;
+  color: #64748b;
+  margin: 0;
+  font-style: italic;
+}
+
+/* Notes box */
+.notesBox {
+  background: #fafaf9;
+  border: 1px solid #e7e5e4;
+  border-left: 4px solid var(--accent-color);
+  padding: 1rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: #44403c;
+}
+
+.notesBox p {
+  margin: 0;
+}
+
+/* Document Signatures */
+.docFooter {
+  margin-top: auto;
+  padding-top: 3rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 3rem;
+}
+
+.sigArea {
+  flex: 1;
+  text-align: center;
+  font-size: 0.8rem;
+  color: #475569;
+}
+
+.sigArea p {
+  margin: 0;
+  line-height: 1.4;
+}
+
+.sigLine {
+  border-top: 1px solid #cbd5e1;
+  margin-bottom: 0.5rem;
+}
+
+/* ==========================================
+   CSS PRINT MEDIA STYLES
+   ========================================== */
+@media print {
+  /* Hide CRM main layout panels */
+  aside,
+  header,
+  footer,
+  nav,
+  .configPanel,
+  .previewHeader,
+  button,
+  [role="banner"],
+  [role="navigation"],
+  [class*="sidebar"],
+  [class*="mobileHeader"],
+  [class*="hamburgerBtn"],
+  [class*="mobileLogoutBtn"],
+  [class*="mobileBackdrop"],
+  [class*="GlobalSearch"] {
+    display: none !important;
+  }
+
+  /* Reset outer application containers to prevent clipping pages */
+  body, 
+  html, 
+  #root,
+  [class*="appContainer"],
+  [class*="mainContent"],
+  [class*="pageContent"],
+  .container,
+  .previewContainer {
+    width: 100% !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: #ffffff !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+  }
+
+  /* Target preview sheet precisely */
+  .a4Page {
+    width: 210mm !important;
+    min-height: 297mm !important;
+    padding: 15mm !important;
+    margin: 0 auto !important;
+    box-shadow: none !important;
+    page-break-after: always;
+    box-sizing: border-box !important;
+  }
+
+  /* Page breaks optimization */
+  .docSection {
+    page-break-inside: avoid;
+  }
+
+  .docTable tr {
+    page-break-inside: avoid;
+  }
+
+  .docFooter {
+    page-break-inside: avoid;
+    margin-top: auto !important;
+  }
+}
+
+/* Responsive configurations on viewport screens */
+@media (max-width: 1024px) {
+  .container {
+    flex-direction: column;
+    overflow-y: auto;
+  }
+
+  .configPanel {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    max-height: 350px;
+  }
+
+  .previewContainer {
+    padding: 1rem;
+  }
+
+  .a4Page {
+    width: 100%;
+    max-width: 210mm;
+    min-height: auto;
+    padding: 1.5rem;
+  }
+  
+  .kpiGrid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+}

@@ -1,0 +1,254 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 1.5rem;
+}
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(0,0,0,0.12);
+}
+
+[data-theme='dark'] .header {
+  border-bottom-color: rgba(255,255,255,0.08);
+}
+
+.titleArea {
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.subtitle {
+  color: var(--text-muted);
+  font-size: 1rem;
+}
+
+/* Pill Filter Styles */
+.pillBox {
+  display: flex;
+  align-items: center;
+  background-color: transparent;
+  gap: 0.5rem;
+}
+
+.pillBtn {
+  padding: 0.4rem 1rem;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background-color: var(--bg-surface);
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.pillBtn:hover {
+  border-color: var(--text-muted);
+  color: var(--text-main);
+}
+
+.pillActive {
+  background-color: var(--accent);
+  border-color: var(--accent);
+  color: #ffffff !important;
+  box-shadow: 0 4px 10px rgba(113, 188, 83, 0.3);
+}
+
+/* Metrics Grid */
+.metricsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.metricCard {
+  background-color: var(--bg-surface);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+[data-theme='dark'] .metricCard {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+}
+
+.metricCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+}
+
+.metricCard h3 {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.metricValue {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+/* Split Layout (Table + Progress Bars) */
+.splitLayout {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  gap: 1.5rem;
+}
+
+@media (max-width: 1024px) {
+  .splitLayout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.chartCard,
+.tableCard {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.3s;
+}
+
+[data-theme='dark'] .chartCard,
+[data-theme='dark'] .tableCard {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+}
+
+.chartCard h2,
+.tableCard h2 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: var(--text-main);
+}
+
+.chartWrapper {
+  width: 100%;
+}
+
+/* Table Specifics */
+.tableResponsive {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  padding: 1rem 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.table th {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.table td {
+  color: var(--text-main);
+  font-size: 0.85rem;
+}
+
+.table tbody tr {
+  transition: background-color 0.2s;
+}
+
+.table tbody tr:hover {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+[data-theme='dark'] .table tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+.avatarMini {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-color: var(--primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  flex-shrink: 0;
+}
+
+/* Progress Bars Cell (Inside Table) */
+.progressCell {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+/* Stages List (Right Panel) */
+.stagesList {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.stageProgressRow {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.stageLabels {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.stageName {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.stageNumbers {
+  font-size: 0.85rem;
+  color: var(--text-main);
+  font-weight: 700;
+}
+
+/* Generic Progress Bar */
+.progressBarBg {
+  width: 100%;
+  height: 6px;
+  background-color: var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progressBarFill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 1s ease-out;
+}

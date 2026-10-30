@@ -2,9 +2,13 @@ import { useState, useMemo } from 'react';
 import { useData } from '../context/DataContext';
 import { MOCK_USERS } from '../context/AuthContext';
 import styles from './Leads.module.css';
-import { Search, Plus, Edit2, Trash2, Building2, Mail, Phone, UserRound, Eye, ChevronLeft, ChevronRight } from 'lucide-react';
+import { 
+  Search, Plus, Edit2, Trash2, Building2, Mail, Phone, 
+  UserRound, Eye, ChevronLeft, ChevronRight, MapPin, FileText 
+} from 'lucide-react';
 import { Lead, Stage } from '../types';
 import Modal from '../components/Modal';
+import { LeadHistory } from '../components/LeadHistory';
 
 const STAGES: Stage[] = [
   'em contato', 'pré-venda', 'realizar orçamento',
@@ -14,8 +18,8 @@ const STAGES: Stage[] = [
 const STAGE_LABELS: Record<Stage, string> = {
   'em contato': 'Em Contato',
   'pré-venda': 'Pré Venda',
-  'realizar orçamento': 'Realizar Orçamento',
-  'orçamento finalizado': 'Orçamento Finalizado',
+  'realizar orçamento': 'Realizar',
+  'orçamento finalizado': 'Finalizado',
   'negociação': 'Negociação',
   'fechamento': 'Fechamento',
   'perda': 'Perda'
@@ -33,6 +37,14 @@ const STAGE_COLORS: Record<Stage, { bg: string; color: string }> = {
 
 const LEADS_PER_PAGE = 12;
 
+// Função auxiliar universal para formatar a moeda (BRL ou USD)
+const formatMoney = (val: number = 0, currency: 'BRL' | 'USD' = 'BRL') => {
+  return new Intl.NumberFormat(currency === 'USD' ? 'en-US' : 'pt-BR', {
+    style: 'currency',
+    currency: currency,
+  }).format(val);
+};
+
 const Leads = () => {
   const { leads, addLead, updateLead, deleteLead } = useData();
   const [searchTerm, setSearchTerm] = useState('');
@@ -44,17 +56,25 @@ const Leads = () => {
   const [currentLead, setCurrentLead] = useState<Partial<Lead>>({});
 
   const filteredLeads = useMemo(() => {
-    const result = leads.filter(lead => {
+    return leads.filter(lead => {
       const termo = searchTerm.toLowerCase();
-      const matchSearch = lead.name.toLowerCase().includes(termo) ||
-             lead.company.toLowerCase().includes(termo) ||
-             lead.email.toLowerCase().includes(termo);
+
+      const name = lead.name?.toLowerCase() || '';
+      const company = lead.company?.toLowerCase() || '';
+      const email = lead.email?.toLowerCase() || '';
+      const taxId = (lead.taxId?.number || lead.cnpj || '').toLowerCase();
+      const city = (lead.address?.city || lead.city || '').toLowerCase();
+
+      const matchSearch = 
+        name.includes(termo) ||
+        company.includes(termo) ||
+        email.includes(termo) ||
+        taxId.includes(termo) ||
+        city.includes(termo);
+
       const matchStage = stageFilter ? lead.stage === stageFilter : true;
       return matchSearch && matchStage;
     });
-    setCurrentPage(1);
-    return result;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [leads, searchTerm, stageFilter]);
 
   const totalPages = Math.ceil(filteredLeads.length / LEADS_PER_PAGE);
@@ -65,7 +85,7 @@ const Leads = () => {
 
   const openAddModal = () => {
     setModalMode('add');
-    setCurrentLead({ stage: 'em contato', value: 0 });
+    setCurrentLead({ stage: 'em contato', value: 0, currency: 'BRL' });
     setIsModalOpen(true);
   };
 
@@ -89,6 +109,16 @@ const Leads = () => {
       updateLead(currentLead.id as string, currentLead);
     }
     setIsModalOpen(false);
+  };
+
+  const handleAddHistoryItem = (newHistoryItem: any) => {
+    if (!currentLead.id) return;
+    
+    const updatedHistory = [...(currentLead.history || []), newHistoryItem];
+    const updatedLead = { ...currentLead, history: updatedHistory };
+    
+    setCurrentLead(updatedLead);
+    updateLead(currentLead.id, updatedLead);
   };
 
   const handleDelete = (id: string, e: React.MouseEvent) => {
@@ -116,15 +146,21 @@ const Leads = () => {
                 <Search size={18} className={styles.icon} />
                 <input
                   type="text"
-                  placeholder="Buscar lead ou empresa..."
+                  placeholder="Buscar lead, empresa, CNPJ/Tax ID ou cidade..."
                   value={searchTerm}
-                  onChange={e => setSearchTerm(e.target.value)}
+                  onChange={e => {
+                    setSearchTerm(e.target.value);
+                    setCurrentPage(1);
+                  }}
                 />
               </div>
               <select
                 className={styles.stageSelect}
                 value={stageFilter}
-                onChange={e => setStageFilter(e.target.value as Stage | '')}
+                onChange={e => {
+                  setStageFilter(e.target.value as Stage | '');
+                  setCurrentPage(1);
+                }}
               >
                 <option value="">Todas as Etapas</option>
                 {STAGES.map(s => (
@@ -148,6 +184,9 @@ const Leads = () => {
             <div className={styles.cardsGrid}>
               {paginatedLeads.map(lead => {
                 const stageStyle = STAGE_COLORS[lead.stage] || { bg: 'rgba(100,100,100,0.1)', color: '#666' };
+                const displayCity = lead.address?.city || lead.city;
+                const displayTaxId = lead.taxId?.number || lead.cnpj;
+
                 return (
                   <div key={lead.id} className={styles.leadCard}>
                     <div className={styles.cardHeader}>
@@ -180,6 +219,18 @@ const Leads = () => {
                         <Phone size={13} className={styles.infoIcon} />
                         <span>{lead.phone || '—'}</span>
                       </div>
+                      {displayCity && (
+                        <div className={styles.infoRow}>
+                          <MapPin size={13} className={styles.infoIcon} />
+                          <span>{displayCity}</span>
+                        </div>
+                      )}
+                      {displayTaxId && (
+                        <div className={styles.infoRow}>
+                          <FileText size={13} className={styles.infoIcon} />
+                          <span>{displayTaxId}</span>
+                        </div>
+                      )}
                       <div className={styles.infoRow}>
                         <UserRound size={13} className={styles.infoIcon} />
                         <span>{vendorName(lead.assignedToId)}</span>
@@ -190,8 +241,9 @@ const Leads = () => {
                       <span className={styles.badge} style={{ backgroundColor: stageStyle.bg, color: stageStyle.color }}>
                         {STAGE_LABELS[lead.stage]}
                       </span>
+                      {/* VALOR DINÂMICO (BRL ou USD) */}
                       <span className={styles.leadValue}>
-                        {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(lead.value)}
+                        {formatMoney(lead.value, lead.currency)}
                       </span>
                     </div>
                   </div>
@@ -231,6 +283,7 @@ const Leads = () => {
         )}
       </div>
 
+      {/* MODAL INTEGRADO */}
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
@@ -249,24 +302,85 @@ const Leads = () => {
           )
         }
       >
-        <fieldset disabled={modalMode === 'view'} style={{ border: 'none', padding: 0, margin: 0 }}>
+        {/* MODO VISUALIZAÇÃO COM HISTÓRICO */}
+        {modalMode === 'view' ? (
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-4 bg-gray-50 p-3 rounded-lg border text-sm">
+              <div><strong>Nome:</strong> {currentLead.name}</div>
+              <div><strong>Empresa:</strong> {currentLead.company}</div>
+              <div><strong>Email:</strong> {currentLead.email || '—'}</div>
+              <div><strong>Telefone:</strong> {currentLead.phone || '—'}</div>
+              <div><strong>Cidade:</strong> {currentLead.city || currentLead.address?.city || '—'}</div>
+              <div><strong>Documento:</strong> {currentLead.cnpj || currentLead.taxId?.number || '—'}</div>
+              <div><strong>Vendedor:</strong> {vendorName(currentLead.assignedToId || '')}</div>
+              <div><strong>Valor:</strong> {formatMoney(currentLead.value, currentLead.currency)}</div>
+              {currentLead.notes && (
+                <div className="col-span-2"><strong>Notas:</strong> {currentLead.notes}</div>
+              )}
+            </div>
+
+            <LeadHistory 
+              leadId={currentLead.id!} 
+              history={currentLead.history} 
+              onAddHistory={handleAddHistoryItem} 
+            />
+          </div>
+        ) : (
+          /* FORMULÁRIO DE ADIÇÃO / EDIÇÃO COM SELETOR DE MOEDA */
           <form id="leadForm" onSubmit={handleSaveLead} className={styles.formGrid}>
             <div className={styles.formGroup}>
               <label>Nome</label>
               <input required type="text" value={currentLead.name || ''} onChange={e => setCurrentLead({...currentLead, name: e.target.value})} />
             </div>
+
             <div className={styles.formGroup}>
               <label>Empresa</label>
               <input required type="text" value={currentLead.company || ''} onChange={e => setCurrentLead({...currentLead, company: e.target.value})} />
             </div>
+            
+            <div className={styles.formGroup}>
+              <label>CNPJ / Tax ID / Documento Fiscal</label>
+              <input 
+                type="text" 
+                placeholder="Ex: 00.000.000/0001-00 ou EIN 12-3456789" 
+                value={currentLead.cnpj || currentLead.taxId?.number || ''} 
+                onChange={e => setCurrentLead({
+                  ...currentLead, 
+                  cnpj: e.target.value,
+                  taxId: { type: 'Tax ID', number: e.target.value }
+                })} 
+              />
+            </div>
+
+            <div className={styles.formGroup}>
+              <label>Cidade</label>
+              <input 
+                type="text" 
+                placeholder="Ex: São Paulo, New York, Lisboa..." 
+                value={currentLead.city || currentLead.address?.city || ''} 
+                onChange={e => setCurrentLead({
+                  ...currentLead, 
+                  city: e.target.value,
+                  address: { ...currentLead.address, city: e.target.value }
+                })} 
+              />
+            </div>
+
             <div className={styles.formGroup}>
               <label>Email</label>
               <input type="email" value={currentLead.email || ''} onChange={e => setCurrentLead({...currentLead, email: e.target.value})} />
             </div>
+
             <div className={styles.formGroup}>
-              <label>Telefone</label>
-              <input type="text" value={currentLead.phone || ''} onChange={e => setCurrentLead({...currentLead, phone: e.target.value})} />
+              <label>Telefone / WhatsApp</label>
+              <input 
+                type="text" 
+                placeholder="Ex: +55 (11) 99999-9999 ou +1 (555) 000-0000" 
+                value={currentLead.phone || ''} 
+                onChange={e => setCurrentLead({...currentLead, phone: e.target.value})} 
+              />
             </div>
+
             <div className={styles.formGroup}>
               <label>Vendedor</label>
               <select required value={currentLead.assignedToId || ''} onChange={e => setCurrentLead({...currentLead, assignedToId: e.target.value})}>
@@ -274,16 +388,31 @@ const Leads = () => {
                 {MOCK_USERS.filter(u => u.role !== 'admin').map(u => <option key={u.id} value={u.id}>{u.name}</option>)}
               </select>
             </div>
+
             <div className={styles.formGroup}>
               <label>Etapa</label>
               <select required value={currentLead.stage || 'em contato'} onChange={e => setCurrentLead({...currentLead, stage: e.target.value as Stage})}>
                 {STAGES.map(s => <option key={s} value={s}>{STAGE_LABELS[s]}</option>)}
               </select>
             </div>
+
+            {/* SELETOR DE MOEDA (BRL ou USD) */}
             <div className={styles.formGroup}>
-              <label>Valor Estimado (R$)</label>
+              <label>Moeda</label>
+              <select 
+                value={currentLead.currency || 'BRL'} 
+                onChange={e => setCurrentLead({...currentLead, currency: e.target.value as 'BRL' | 'USD'})}
+              >
+                <option value="BRL">Real (R$)</option>
+                <option value="USD">Dólar (US$)</option>
+              </select>
+            </div>
+
+            <div className={styles.formGroup}>
+              <label>Valor Estimado</label>
               <input type="number" required min="0" value={currentLead.value || 0} onChange={e => setCurrentLead({...currentLead, value: Number(e.target.value)})} />
             </div>
+
             <div className={styles.formGroup}>
               <label>Canal de Origem</label>
               <select value={currentLead.source || ''} onChange={e => setCurrentLead({...currentLead, source: e.target.value})}>
@@ -297,12 +426,13 @@ const Leads = () => {
                 <option value="Outros">Outros</option>
               </select>
             </div>
+
             <div className={styles.formGroup} style={{ gridColumn: 'span 2' }}>
               <label>Notas adicionais</label>
               <textarea rows={3} value={currentLead.notes || ''} onChange={e => setCurrentLead({...currentLead, notes: e.target.value})}></textarea>
             </div>
           </form>
-        </fieldset>
+        )}
       </Modal>
     </div>
   );

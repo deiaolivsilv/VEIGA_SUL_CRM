@@ -18,7 +18,7 @@ const STAGES: Stage[] = [
 const STAGE_LABELS: Record<Stage, string> = {
   'em contato': 'Em Contato',
   'pré-venda': 'Pré Venda',
-  'realizar orçamento': 'Realizar',
+  'realizar orçamento': 'Orçamento',
   'orçamento finalizado': 'Finalizado',
   'negociação': 'Negociação',
   'fechamento': 'Fechamento',

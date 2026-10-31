@@ -120,7 +120,26 @@ const Leads = () => {
     setCurrentLead(updatedLead);
     updateLead(currentLead.id, updatedLead);
   };
+const handleDeleteAttachment = (historyId: string, attachmentId: string) => {
+    if (!currentLead.id) return;
 
+    // Remove apenas o anexo do item de histórico correspondente
+    const updatedHistory = (currentLead.history || []).map(item => {
+      if (item.id === historyId) {
+        return {
+          ...item,
+          attachments: (item.attachments || []).filter(att => att.id !== attachmentId)
+        };
+      }
+      return item;
+    });
+
+    const updatedLead = { ...currentLead, history: updatedHistory };
+
+    // Atualiza o estado local e persiste no DataContext/Backend
+    setCurrentLead(updatedLead);
+    updateLead(currentLead.id, updatedLead);
+  };
   const handleDelete = (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
     if (window.confirm('Tem certeza que deseja excluir este lead?')) {
@@ -322,7 +341,8 @@ const Leads = () => {
             <LeadHistory 
               leadId={currentLead.id!} 
               history={currentLead.history} 
-              onAddHistory={handleAddHistoryItem} 
+              onAddHistory={handleAddHistoryItem}
+              onDeleteAttachment={handleDeleteAttachment} 
             />
           </div>
         ) : (

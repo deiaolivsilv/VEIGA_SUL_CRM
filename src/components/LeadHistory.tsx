@@ -1,14 +1,15 @@
 import React, { useState, useRef } from 'react';
 import { HistoryItem, Attachment } from '../types';
-import { Paperclip, X, FileText, Download, ExternalLink } from 'lucide-react';
+import { Paperclip, X, FileText, Download, ExternalLink, Trash2 } from 'lucide-react';
 
 interface Props {
   leadId: string;
   history?: HistoryItem[];
   onAddHistory: (item: HistoryItem) => void;
+  onDeleteAttachment?: (historyId: string, attachmentId: string) => void;
 }
 
-export const LeadHistory: React.FC<Props> = ({ leadId, history = [], onAddHistory }) => {
+export const LeadHistory: React.FC<Props> = ({ leadId, history = [], onAddHistory, onDeleteAttachment }) => {
   const [description, setDescription] = useState('');
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -110,8 +111,8 @@ export const LeadHistory: React.FC<Props> = ({ leadId, history = [], onAddHistor
         )}
       </form>
 
-      {/* Listagem do Histórico existente com Miniaturas */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxHeight: '250px', overflowY: 'auto', paddingRight: '4px' }}>
+      {/* Listagem do Histórico existente com Anexos */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxHeight: '300px', overflowY: 'auto', paddingRight: '4px' }}>
         {history.length === 0 ? (
           <p style={{ fontSize: '12px', color: '#9ca3af', fontStyle: 'italic', margin: 0 }}>Nenhum histórico registrado para este lead.</p>
         ) : (
@@ -123,77 +124,72 @@ export const LeadHistory: React.FC<Props> = ({ leadId, history = [], onAddHistor
               </div>
               <p style={{ fontSize: '13px', color: '#374151', margin: 0, whiteSpace: 'pre-wrap' }}>{item.description}</p>
 
-              {/* Miniaturas de anexos salvos */}
+              {/* Lista de anexos salvos com opção de exclusão individual */}
               {item.attachments && item.attachments.length > 0 && (
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', paddingTop: '8px', borderTop: '1px solid #f3f4f6' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', paddingTop: '8px', borderTop: '1px solid #f3f4f6' }}>
                   {item.attachments.map(att => {
                     const isImg = att.type === 'image' || att.name.match(/\.(jpeg|jpg|png|webp|gif)$/i);
                     return (
                       <div 
                         key={att.id} 
                         style={{ 
-                          position: 'relative', 
-                          width: '64px', 
-                          height: '64px', 
-                          border: '1px solid #e5e7eb', 
-                          borderRadius: '6px', 
-                          background: '#f9fafb', 
-                          overflow: 'hidden', 
                           display: 'flex', 
                           alignItems: 'center', 
-                          justifyContent: 'center',
-                          flexShrink: 0
+                          justifyContent: 'space-between',
+                          background: '#f9fafb', 
+                          border: '1px solid #e5e7eb', 
+                          borderRadius: '6px', 
+                          padding: '6px 10px',
+                          fontSize: '12px'
                         }}
                       >
-                        {isImg ? (
-                          <img 
-                            src={att.url} 
-                            alt={att.name} 
-                            style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} 
-                          />
-                        ) : (
-                          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '4px', textAlign: 'center', width: '100%', height: '100%' }}>
-                            <FileText size={22} color="#ef4444" />
-                            <span style={{ fontSize: '8px', color: '#4b5563', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', width: '100%', marginTop: '2px' }}>
-                              {att.name}
-                            </span>
-                          </div>
-                        )}
+                        {/* Nome e ícone/miniatura do arquivo */}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', overflow: 'hidden' }}>
+                          {isImg ? (
+                            <img src={att.url} alt={att.name} style={{ width: '28px', height: '28px', objectFit: 'cover', borderRadius: '4px', flexShrink: 0 }} />
+                          ) : (
+                            <FileText size={18} color="#ef4444" style={{ flexShrink: 0 }} />
+                          )}
+                          <span style={{ color: '#374151', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '180px' }}>
+                            {att.name}
+                          </span>
+                        </div>
 
-                        {/* Botões de Ação ao passar o mouse */}
-                        <div 
-                          className="attachment-actions"
-                          style={{ 
-                            position: 'absolute', 
-                            inset: 0, 
-                            background: 'rgba(0,0,0,0.6)', 
-                            display: 'flex', 
-                            alignItems: 'center', 
-                            justifyContent: 'center', 
-                            gap: '4px', 
-                            opacity: 0, 
-                            transition: 'opacity 0.2s ease' 
-                          }}
-                          onMouseEnter={(e) => (e.currentTarget.style.opacity = '1')}
-                          onMouseLeave={(e) => (e.currentTarget.style.opacity = '0')}
-                        >
+                        {/* Botões de Ação: Visualizar, Baixar e Lixeira */}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
                           <a 
                             href={att.url} 
                             target="_blank" 
                             rel="noreferrer" 
                             title="Visualizar arquivo"
-                            style={{ background: '#fff', padding: '4px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none' }}
+                            style={{ color: '#2563eb', display: 'flex', alignItems: 'center', textDecoration: 'none' }}
                           >
-                            <ExternalLink size={12} color="#2563eb" />
+                            <ExternalLink size={15} />
                           </a>
+                          
                           <a 
                             href={att.url} 
                             download={att.name} 
                             title="Baixar arquivo"
-                            style={{ background: '#fff', padding: '4px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none' }}
+                            style={{ color: '#16a34a', display: 'flex', alignItems: 'center', textDecoration: 'none' }}
                           >
-                            <Download size={12} color="#16a34a" />
+                            <Download size={15} />
                           </a>
+
+                          {onDeleteAttachment && (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                if (window.confirm(`Deseja excluir apenas o arquivo "${att.name}"?`)) {
+                                  onDeleteAttachment(item.id, att.id);
+                                }
+                              }}
+                              title="Excluir este arquivo"
+                              style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#dc2626', display: 'flex', alignItems: 'center', padding: '2px' }}
+                            >
+                              <Trash2 size={15} />
+                            </button>
+                          )}
                         </div>
                       </div>
                     );
